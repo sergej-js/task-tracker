@@ -10,10 +10,10 @@ services:
       POSTGRES_PASSWORD: "Zgtyz8mxX0O45zgRjd5q"
     ports:
       - "5432:5432"
-  bot:
-    build: .
-    restart: always
-    depends_on:
-      - postgres
-    ports:
-      - 3000:3000
+  # server:
+  #   build: .
+  #   restart: always
+  #   depends_on:
+  #     - postgres
+  #   ports:
+  #     - 3000:3000

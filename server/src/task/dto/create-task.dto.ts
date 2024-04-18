@@ -1,12 +1,12 @@
 import { Task } from "@prisma/client";
-import { IsDateString, IsEmpty, IsString } from "class-validator";
+import { IsDateString, IsNotEmpty, IsString } from "class-validator";
 
 export class CreateTaskDto {
     @IsString()
-    @IsEmpty()
+    @IsNotEmpty()
     title: string;
 
-    @IsDateString()
-    @IsEmpty()
+    @IsDateString({ strict: false })
+    @IsNotEmpty()
     deadline: Date;
 }

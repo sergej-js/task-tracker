@@ -9,7 +9,7 @@ datasource db {
 
 enum TaskStatus {
   FINISHED
-  PROCCESS
+  PROCESS
   FREE
   EXPIRED
 }
