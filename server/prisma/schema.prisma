@@ -9,15 +9,22 @@ datasource db {
 
 enum TaskStatus {
   FINISHED
-  PROCESS
+  IN_PROGRESS
   FREE
   EXPIRED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
 }
 
 model Task {
   id Int @default(autoincrement()) @id
   title String
   status TaskStatus @default(FREE)
+  priority TaskPriority
   deadline DateTime
   
   createdAt DateTime @default(now())

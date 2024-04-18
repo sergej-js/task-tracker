@@ -1,5 +1,5 @@
-import { Task } from "@prisma/client";
-import { IsDateString, IsNotEmpty, IsString } from "class-validator";
+import { TaskPriority } from "@prisma/client";
+import { IsDateString, IsEnum, IsNotEmpty, IsString } from "class-validator";
 
 export class CreateTaskDto {
     @IsString()
@@ -9,4 +9,8 @@ export class CreateTaskDto {
     @IsDateString({ strict: false })
     @IsNotEmpty()
     deadline: Date;
+
+    @IsEnum(TaskPriority)
+    @IsNotEmpty()
+    priority: TaskPriority;
 }

@@ -12,7 +12,8 @@ export class TaskService {
         return await this.prismaService.task.create({
             data: {
                 title: dto.title,
-                deadline: new Date(dto.deadline)
+                deadline: new Date(dto.deadline),
+                priority: dto.priority
             }
         })
     }
@@ -26,6 +27,7 @@ export class TaskService {
                 title: dto.title,
                 deadline: dto.deadline,
                 status: dto.status,
+                priority: dto.priority,
             }
         })
     }
