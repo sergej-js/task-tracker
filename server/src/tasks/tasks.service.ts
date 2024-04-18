@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -6,14 +6,19 @@ import { Task } from '@prisma/client';
 
 @Injectable()
 export class TasksService {
-    constructor(private readonly prismaService: PrismaService) {}
+    constructor(private readonly prismaService: PrismaService) { }
 
     async create(dto: CreateTaskDto): Promise<Task> {
         return await this.prismaService.task.create({
             data: {
                 title: dto.title,
                 deadline: new Date(dto.deadline),
-                priority: dto.priority
+                priority: dto.priority,
+                executors: {
+                    create: dto.executors.map(userId => ({
+                        user: { connect: { id: userId } }
+                    }))
+                }
             }
         })
     }
@@ -28,6 +33,11 @@ export class TasksService {
                 deadline: dto.deadline,
                 status: dto.status,
                 priority: dto.priority,
+                executors: {
+                    create: dto.executors.map(userId => ({
+                        user: { connect: { id: userId } }
+                    }))
+                }
             }
         })
     }

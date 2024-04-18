@@ -20,13 +20,43 @@ enum TaskPriority {
   HIGH
 }
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
 model Task {
-  id Int @default(autoincrement()) @id
-  title String
-  status TaskStatus @default(FREE)
+  id       Int          @id @default(autoincrement())
+  title    String
+  status   TaskStatus   @default(FREE)
   priority TaskPriority
   deadline DateTime
-  
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  executors UsersOnTasks[]
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  name     String
+  email    String
+  password String
+  role     UserRole @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tasks UsersOnTasks[]
+}
+
+model UsersOnTasks {
+  task       Task     @relation(fields: [taskId], references: [id])
+  taskId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  assignedAt DateTime @default(now())
+
+  @@id([taskId, userId])
 }
