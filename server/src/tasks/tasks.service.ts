@@ -19,6 +19,13 @@ export class TasksService {
                         user: { connect: { id: userId } }
                     }))
                 }
+            },
+            include: {
+                executors: {
+                    select: {
+                        userId: true,
+                    }
+                }
             }
         })
     }
@@ -38,6 +45,13 @@ export class TasksService {
                         user: { connect: { id: userId } }
                     }))
                 }
+            },
+            include: {
+                executors: {
+                    select: {
+                        userId: true,
+                    }
+                }
             }
         })
     }
@@ -46,11 +60,26 @@ export class TasksService {
         return await this.prismaService.task.findFirst({
             where: {
                 id,
+            },
+            include: {
+                executors: {
+                    select: {
+                        userId: true,
+                    }
+                }
             }
         })
     }
 
     async findAll(): Promise<Task[]> {
-        return await this.prismaService.task.findMany()
+        return await this.prismaService.task.findMany({
+            include: {
+                executors: {
+                    select: {
+                        userId: true,
+                    }
+                }
+            }
+        })
     }
 }
