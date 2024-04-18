@@ -5,7 +5,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from '@prisma/client';
 
 @Injectable()
-export class TaskService {
+export class TasksService {
     constructor(private readonly prismaService: PrismaService) {}
 
     async create(dto: CreateTaskDto): Promise<Task> {
