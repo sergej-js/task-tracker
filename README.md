@@ -4,7 +4,7 @@
 
 ## Features
 
-- Add, Edit Task
+- Add, Edit, Delete Task
 - Set priority for Task (High, Medium, Low)
 - Set deadline for Task (example: 2024-04-24)
 - Assign an executor or executors to a task
