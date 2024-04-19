@@ -52,9 +52,9 @@ model User {
 }
 
 model UsersOnTasks {
-  task       Task     @relation(fields: [taskId], references: [id])
+  task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
   taskId     Int
-  user       User     @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
   assignedAt DateTime @default(now())
 

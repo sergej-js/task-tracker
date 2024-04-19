@@ -82,4 +82,19 @@ export class TasksService {
             }
         })
     }
+
+    async delete(id: number) {
+        return await this.prismaService.task.delete({
+            where: {
+                id,
+            },
+            include: {
+                executors: {
+                    select: {
+                        userId: true,
+                    }
+                }
+            },
+        })
+    }
 }
