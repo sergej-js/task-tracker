@@ -1,0 +1,1 @@
+export const CONFLICT_ERROR_MESSAGE = 'Record already exists.'
