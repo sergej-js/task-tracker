@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { Task } from '@prisma/client';
 import { PrismaService } from 'src/common/database/prisma.service';
+import { TaskWithExecutors } from './types';
 
 @Injectable()
 export class TasksService {
     constructor(private readonly prismaService: PrismaService) { }
 
-    async create(dto: CreateTaskDto): Promise<Task> {
+    async create(dto: CreateTaskDto): Promise<TaskWithExecutors> {
         return await this.prismaService.task.create({
             data: {
                 title: dto.title,
@@ -22,15 +22,15 @@ export class TasksService {
             },
             include: {
                 executors: {
-                    select: {
-                        userId: true,
+                    include: {
+                        user: true,
                     }
                 }
             }
         })
     }
 
-    async update(id: number, dto: UpdateTaskDto): Promise<Task> {
+    async update(id: number, dto: UpdateTaskDto): Promise<TaskWithExecutors> {
         return await this.prismaService.task.update({
             where: {
                 id,
@@ -48,50 +48,50 @@ export class TasksService {
             },
             include: {
                 executors: {
-                    select: {
-                        userId: true,
+                    include: {
+                        user: true,
                     }
                 }
             }
         })
     }
 
-    async findById(id: number): Promise<Task> {
+    async findById(id: number): Promise<TaskWithExecutors> {
         return await this.prismaService.task.findFirst({
             where: {
                 id,
             },
             include: {
                 executors: {
-                    select: {
-                        userId: true,
+                    include: {
+                        user: true,
                     }
                 }
             }
         })
     }
 
-    async findAll(): Promise<Task[]> {
+    async findAll(): Promise<TaskWithExecutors[]> {
         return await this.prismaService.task.findMany({
             include: {
                 executors: {
-                    select: {
-                        userId: true,
+                    include: {
+                        user: true,
                     }
                 }
             }
         })
     }
 
-    async delete(id: number): Promise<Task> {
+    async delete(id: number): Promise<TaskWithExecutors> {
         return await this.prismaService.task.delete({
             where: {
                 id,
             },
             include: {
                 executors: {
-                    select: {
-                        userId: true,
+                    include: {
+                        user: true,
                     }
                 }
             },
