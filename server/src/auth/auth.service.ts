@@ -3,34 +3,31 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/register.dto';
-import { PrismaService } from 'src/common/database/prisma.service';
+import { UsersService } from 'src/users/users.service';
+import { INVALID_CREDENTIALS_ERROR, USER_EXISTS_ERROR, USER_NOT_FOUND_ERROR } from './consts';
 @Injectable()
 export class AuthService {
 
-    constructor(private readonly prismaService: PrismaService, private readonly jwtService: JwtService) { }
+    constructor(private readonly usersService: UsersService, private readonly jwtService: JwtService) { }
 
     async login(loginDto: LoginDto) {
         const { email, password } = loginDto;
 
-        const user = await this.prismaService.user.findFirst({
-            where: { 
-                email,
-            },
-        });
+        const user = await this.usersService.findByEmail(email);
 
         if(!user) {
-            throw new NotFoundException('user not found');
+            throw new NotFoundException(USER_NOT_FOUND_ERROR);
         }
 
         const validatePassword = await bcrypt.compare(password, user.password);
 
         if (!validatePassword) {
-            throw new UnauthorizedException('invalid password');
+            throw new UnauthorizedException(INVALID_CREDENTIALS_ERROR);
         }
 
         delete user.password;
         return {
-            token: this.jwtService.sign({
+            access_token: this.jwtService.sign({
                 email,
                 role: user.role,
             }),
@@ -39,29 +36,19 @@ export class AuthService {
     }
 
     async register(createUserDto: CreateUserDto) {
-        const existing = await this.prismaService.user.findFirst({
-            where: {
-                email: createUserDto.email
-            }
-        });
+        const existing = await this.usersService.findByEmail(createUserDto.email);
 
         if(existing) {
-            throw new ConflictException('email already exists');
+            throw new ConflictException(USER_EXISTS_ERROR);
         }
 
         const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
-        const user = await this.prismaService.user.create({
-            data: {
-                email: createUserDto.email,
-                name: createUserDto.name,
-                password: hashedPassword
-            }
-        });
+        createUserDto.password = hashedPassword;
+        const user = await this.usersService.create(createUserDto)
 
-        delete user.password;
         return {
-            token: this.jwtService.sign({ email: user.email, role: user.role }),
+            access_token: this.jwtService.sign({ email: user.email, role: user.role }),
             user
         }
     }

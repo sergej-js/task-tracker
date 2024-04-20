@@ -56,7 +56,7 @@ export class TasksService {
         })
     }
 
-    async findOne(id: number): Promise<Task> {
+    async findById(id: number): Promise<Task> {
         return await this.prismaService.task.findFirst({
             where: {
                 id,
@@ -83,7 +83,7 @@ export class TasksService {
         })
     }
 
-    async delete(id: number) {
+    async delete(id: number): Promise<Task> {
         return await this.prismaService.task.delete({
             where: {
                 id,

@@ -23,8 +23,8 @@ export class TaskController {
 
     @UseGuards(JwtAuthGuard)
     @Get(':id')
-    async getTask(@Param('id') id: number) {
-        const task = await this.taskService.findOne(+id);
+    async getTaskById(@Param('id') id: number) {
+        const task = await this.taskService.findById(+id);
         if (!task) {
             throw new NotFoundException(TASK_NOT_FOUND_MESSAGE(id));
         }
