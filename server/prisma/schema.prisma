@@ -10,7 +10,6 @@ datasource db {
 enum TaskStatus {
   FINISHED
   IN_PROGRESS
-  FREE
   EXPIRED
 }
 
@@ -28,7 +27,7 @@ enum UserRole {
 model Task {
   id       Int          @id @default(autoincrement())
   title    String
-  status   TaskStatus   @default(FREE)
+  status   TaskStatus   @default(IN_PROGRESS)
   priority TaskPriority
   deadline DateTime
 
@@ -41,9 +40,10 @@ model Task {
 model User {
   id       Int      @id @default(autoincrement())
   name     String
-  email    String
+  email    String @unique
   password String
   role     UserRole @default(USER)
+  refreshToken String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

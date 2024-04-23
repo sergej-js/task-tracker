@@ -2,7 +2,7 @@ import { Body, ClassSerializerInterceptor, Controller, Delete, Get, NotFoundExce
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { JwtAuthGuard } from 'src/auth/guards/auth.guard';
+import { AccessTokenGuard } from 'src/auth/guards/access.guard';
 import { RoleGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/roles/roles.decorator';
 import { TASKS_NOT_FOUND_MESSAGE, TASK_NOT_FOUND_MESSAGE } from './consts';
@@ -16,7 +16,7 @@ import { ExecutorEntity, TaskEntity } from './entities/tasks.entity';
 export class TaskController {
     constructor(private readonly taskService: TasksService) {}
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(AccessTokenGuard)
     @Get()
     async getAllTasks() {
         const tasks = await this.taskService.findAll();
@@ -35,7 +35,7 @@ export class TaskController {
         })));
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(AccessTokenGuard)
     @Get(':id')
     async getTaskById(@Param('id') id: number) {
         const task = await this.taskService.findById(+id);
@@ -55,7 +55,7 @@ export class TaskController {
     }
 
     @Roles('ADMIN')
-    @UseGuards(JwtAuthGuard, RoleGuard)
+    @UseGuards(AccessTokenGuard, RoleGuard)
     @Post()
     async createTask(@Body() dto: CreateTaskDto) {
         const task = await this.taskService.create(dto)
@@ -72,7 +72,7 @@ export class TaskController {
     }
 
     @Roles('ADMIN')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(AccessTokenGuard)
     @Patch(':id')
     async updateTask(@Param('id') id: number, @Body() dto: UpdateTaskDto) {
         const task = await this.taskService.update(+id, dto);
@@ -89,7 +89,7 @@ export class TaskController {
     }
 
     @Roles('ADMIN')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(AccessTokenGuard)
     @Delete(':id')
     async deleteTask(@Param('id') id: number) {
         const task = await this.taskService.delete(+id);

@@ -1,7 +1,7 @@
-import { Task, TaskPriority, TaskStatus, User, UserRole, UsersOnTasks } from "@prisma/client";
+import { Task, TaskPriority, TaskStatus, User, UserRole } from "@prisma/client";
 import { Exclude } from "class-transformer";
 
-export class ExecutorEntity implements Omit<User, 'password'> {
+export class ExecutorEntity implements Omit<User, 'password' | 'refreshToken'> {
     assignedAt: Date;
     id: number;
     name: string;
@@ -9,6 +9,9 @@ export class ExecutorEntity implements Omit<User, 'password'> {
 
     @Exclude()
     password: string;
+
+    @Exclude()
+    refreshToken: string;
 
     role: UserRole;
     createdAt: Date;
